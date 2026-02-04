@@ -1,0 +1,480 @@
+================================================================================
+Simple if statement
+================================================================================
+[% if condition; echo "yes"; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (if_statement
+        (identifier)
+        (echo_statement
+          (string)))))
+  (content))
+
+================================================================================
+If-else statement
+================================================================================
+[% if condition; echo "yes"; else; echo "no"; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (if_statement
+        (identifier)
+        (echo_statement
+          (string))
+        (else_clause
+          (echo_statement
+            (string))))))
+  (content))
+
+================================================================================
+If-else if-else statement
+================================================================================
+[% if a; echo "a"; else if b; echo "b"; else; echo "c"; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (if_statement
+        (identifier)
+        (echo_statement
+          (string))
+        (else_clause
+          (identifier)
+          (echo_statement
+            (string))
+          (else_clause
+            (echo_statement
+              (string)))))))
+  (content))
+
+================================================================================
+Inline if-then statement
+================================================================================
+[% if condition then echo "yes"; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (if_statement
+        (identifier)
+        (echo_statement
+          (string)))))
+  (content))
+
+================================================================================
+Foreach with value only
+================================================================================
+[% foreach items as item; echo item; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (foreach_statement
+        (identifier)
+        (identifier)
+        (echo_statement
+          (identifier)))))
+  (content))
+
+================================================================================
+Foreach with key and value
+================================================================================
+[% foreach items as key, value; echo key; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (foreach_statement
+        (identifier)
+        (identifier)
+        (identifier)
+        (echo_statement
+          (identifier)))))
+  (content))
+
+================================================================================
+Foreach with break
+================================================================================
+[% foreach items as item; if item == target; break; end; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (foreach_statement
+        (identifier)
+        (identifier)
+        (if_statement
+          (binary_expression
+            left: (identifier)
+            right: (identifier))
+          (break_statement)))))
+  (content))
+
+================================================================================
+While loop
+================================================================================
+[% while condition; echo "loop"; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (while_statement
+        (identifier)
+        (echo_statement
+          (string)))))
+  (content))
+
+================================================================================
+For range loop
+================================================================================
+[% for 0..10 as i; echo i; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (for_statement
+        (number)
+        (number)
+        (identifier)
+        (echo_statement
+          (identifier)))))
+  (content))
+
+================================================================================
+Nested if statements
+================================================================================
+[% if a; if b; echo "nested"; end; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (if_statement
+        (identifier)
+        (if_statement
+          (identifier)
+          (echo_statement
+            (string))))))
+  (content))
+
+================================================================================
+If with complex condition
+================================================================================
+[% if a > 0 && b < 10; echo "yes"; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (if_statement
+        (binary_expression
+          left: (binary_expression
+            left: (identifier)
+            right: (number))
+          right: (binary_expression
+            left: (identifier)
+            right: (number)))
+        (echo_statement
+          (string)))))
+  (content))
+
+================================================================================
+Split if with HTML content
+================================================================================
+[% if condition %]
+<div>content</div>
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_if_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split if-else with HTML content
+================================================================================
+[% if condition %]
+<div>yes</div>
+[% else %]
+<div>no</div>
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_if_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_else)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split if-else if-else chain
+================================================================================
+[% if a %]
+content a
+[% else if b %]
+content b
+[% else %]
+content c
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_if_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_else_if
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_else)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split foreach with HTML content
+================================================================================
+[% foreach items as item %]
+<li>[% item %]</li>
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_foreach_start
+        (identifier)
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (identifier)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split foreach with key-value
+================================================================================
+[% foreach hash as key, value %]
+<dt>[% key %]</dt>
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_foreach_start
+        (identifier)
+        (identifier)
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (identifier)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split while loop
+================================================================================
+[% while i < 10 %]
+<span>[% i %]</span>
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_while_start
+        (binary_expression
+          left: (identifier)
+          right: (number)))))
+  (content)
+  (directive
+    (code
+      (identifier)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split for range loop
+================================================================================
+[% for 0..5 as i %]
+<span>[% i %]</span>
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_for_start
+        (number)
+        (number)
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (identifier)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split macro definition
+================================================================================
+[% macro inlineScript() %]
+console.log("hello");
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_macro_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split if with semicolon
+================================================================================
+[% if condition; %]
+<div>content</div>
+[% end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_if_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Nested split constructs
+================================================================================
+[% if outer %]
+[% foreach items as item %]
+<div>[% item %]</div>
+[% end %]
+[% end %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_if_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_foreach_start
+        (identifier)
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (identifier)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Function call without call keyword
+================================================================================
+[% myFunction(arg1, arg2) %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (call_expression
+        function: (identifier)
+        (argument_list
+          (argument
+            (identifier))
+          (argument
+            (identifier))))))
+  (content))
+

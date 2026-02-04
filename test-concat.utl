@@ -1,0 +1,8 @@
+[% this.block.add_css(
+'type':'default',
+'css':'
+    #tncms-block-' + this.block.id + ' {
+        color: red;
+    }
+'
+); %]

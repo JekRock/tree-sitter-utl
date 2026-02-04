@@ -1,0 +1,195 @@
+================================================================================
+Macro with no parameters
+================================================================================
+[% macro greet(); echo "Hello"; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (macro_definition
+        (identifier)
+        (echo_statement
+          (string)))))
+  (content))
+
+================================================================================
+Macro with parameters
+================================================================================
+[% macro greet(name, age); echo name; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (macro_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier))
+          (parameter
+            (identifier)))
+        (echo_statement
+          (identifier)))))
+  (content))
+
+================================================================================
+Macro with default parameters
+================================================================================
+[% macro greet(name = "World"); echo name; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (macro_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier)
+            (string)))
+        (echo_statement
+          (identifier)))))
+  (content))
+
+================================================================================
+Macro with mixed parameters
+================================================================================
+[% macro func(required, optional = 10); echo required; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (macro_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier))
+          (parameter
+            (identifier)
+            (number)))
+        (echo_statement
+          (identifier)))))
+  (content))
+
+================================================================================
+Macro with array default
+================================================================================
+[% macro func(items = []); echo items; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (macro_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier)
+            (array_literal)))
+        (echo_statement
+          (identifier)))))
+  (content))
+
+================================================================================
+Macro with return
+================================================================================
+[% macro getValue(); return 42; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (macro_definition
+        (identifier)
+        (return_statement
+          (number)))))
+  (content))
+
+================================================================================
+Array literal with trailing comma
+================================================================================
+[% items = [1, 2, 3,]; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (assignment
+        (identifier)
+        (array_literal
+          (number)
+          (number)
+          (number)))))
+  (content))
+
+================================================================================
+Hash literal with multiple pairs
+================================================================================
+[% config = ['debug': true, 'timeout': 30]; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (assignment
+        (identifier)
+        (hash_literal
+          (hash_pair
+            key: (string)
+            value: (boolean))
+          (hash_pair
+            key: (string)
+            value: (number))))))
+  (content))
+
+================================================================================
+Method chaining
+================================================================================
+[% result = obj.method1().method2().value; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (assignment
+        (identifier)
+        (member_expression
+          object: (call_expression
+            function: (member_expression
+              object: (call_expression
+                function: (member_expression
+                  object: (identifier)
+                  property: (identifier)))
+              property: (identifier)))
+          property: (identifier)))))
+  (content))
+
+================================================================================
+Complex nested expression
+================================================================================
+[% array[array | length] = value; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (assignment
+        (subscript_expression
+          object: (identifier)
+          index: (filter_expression
+            value: (identifier)
+            filter: (identifier)))
+        (identifier))))
+  (content))

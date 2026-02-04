@@ -1,0 +1,395 @@
+================================================================================
+Arithmetic operators
+================================================================================
+[% a + b %]
+[% a - b %]
+[% a * b %]
+[% a / b %]
+[% a % b %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content))
+
+================================================================================
+Comparison operators
+================================================================================
+[% a == b %]
+[% a != b %]
+[% a < b %]
+[% a > b %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content))
+
+================================================================================
+Logical operators
+================================================================================
+[% a && b %]
+[% a || b %]
+[% !a %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (unary_expression
+        operand: (identifier))))
+  (content))
+
+================================================================================
+Unary minus
+================================================================================
+[% -42 %]
+[% x = -5; %]
+[% -a + b %]
+[% a - -b %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (unary_expression
+        operand: (number))))
+  (content)
+  (directive
+    (code
+      (assignment
+        (identifier)
+        (unary_expression
+          operand: (number)))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (unary_expression
+          operand: (identifier))
+        right: (identifier))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (identifier)
+        right: (unary_expression
+          operand: (identifier)))))
+  (content))
+
+================================================================================
+Modulo operator
+================================================================================
+[% 10 % 3 %]
+[% (i + 1) % cols == 0 %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (binary_expression
+        left: (number)
+        right: (number))))
+  (content)
+  (directive
+    (code
+      (binary_expression
+        left: (binary_expression
+          left: (parenthesized_expression
+            (binary_expression
+              left: (identifier)
+              right: (number)))
+          right: (identifier))
+        right: (number))))
+  (content))
+
+================================================================================
+Filter expression
+================================================================================
+[% name | lowercase %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (filter_expression
+        value: (identifier)
+        filter: (identifier))))
+  (content))
+
+================================================================================
+Filter with function call
+================================================================================
+[% name | truncate(10) %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (filter_expression
+        value: (identifier)
+        filter: (call_expression
+          function: (identifier)
+          (argument_list
+            (argument
+              (number)))))))
+  (content))
+
+================================================================================
+Chained filters
+================================================================================
+[% name | lowercase | trim %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (filter_expression
+        value: (filter_expression
+          value: (identifier)
+          filter: (identifier))
+        filter: (identifier))))
+  (content))
+
+================================================================================
+Member access
+================================================================================
+[% obj.property %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (member_expression
+        object: (identifier)
+        property: (identifier))))
+  (content))
+
+================================================================================
+Chained member access
+================================================================================
+[% obj.prop1.prop2 %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (member_expression
+        object: (member_expression
+          object: (identifier)
+          property: (identifier))
+        property: (identifier))))
+  (content))
+
+================================================================================
+Subscript access
+================================================================================
+[% array[0] %]
+[% hash['key'] %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (subscript_expression
+        object: (identifier)
+        index: (number))))
+  (content)
+  (directive
+    (code
+      (subscript_expression
+        object: (identifier)
+        index: (string))))
+  (content))
+
+================================================================================
+Function call
+================================================================================
+[% func(a, b) %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (call_expression
+        function: (identifier)
+        (argument_list
+          (argument
+            (identifier))
+          (argument
+            (identifier))))))
+  (content))
+
+================================================================================
+Function call with named arguments
+================================================================================
+[% func('key': value) %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (call_expression
+        function: (identifier)
+        (argument_list
+          (argument
+            name: (string)
+            value: (identifier))))))
+  (content))
+
+================================================================================
+Method call
+================================================================================
+[% obj.method(arg) %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (call_expression
+        function: (member_expression
+          object: (identifier)
+          property: (identifier))
+        (argument_list
+          (argument
+            (identifier))))))
+  (content))
+
+================================================================================
+Parenthesized expression
+================================================================================
+[% (a + b) * c %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (binary_expression
+        left: (parenthesized_expression
+          (binary_expression
+            left: (identifier)
+            right: (identifier)))
+        right: (identifier))))
+  (content))
+
+================================================================================
+Array literal
+================================================================================
+[% [1, 2, 3] %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (array_literal
+        (number)
+        (number)
+        (number))))
+  (content))
+
+================================================================================
+Empty array literal
+================================================================================
+[% [] %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (array_literal)))
+  (content))
+
+================================================================================
+Hash literal
+================================================================================
+[% ['key': value] %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (hash_literal
+        (hash_pair
+          key: (string)
+          value: (identifier)))))
+  (content))

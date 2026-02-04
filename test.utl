@@ -1,0 +1,4 @@
+Hello World
+[% variable %]
+/* This is a comment */
+[% if true; echo "test"; end; %]
