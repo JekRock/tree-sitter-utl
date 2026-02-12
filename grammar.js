@@ -33,12 +33,12 @@ module.exports = grammar({
 
     code: $ => repeat1(choice(
       $._statement,
-      $._expression,
-      $.comment
+      $._expression
     )),
 
     // Statements
     _statement: $ => choice(
+      $.comment,
       $.assignment,
       $.echo_statement,
       $.return_statement,

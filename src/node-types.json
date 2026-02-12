@@ -862,6 +862,10 @@
           "named": true
         },
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "continue_statement",
           "named": true
         },
@@ -1166,6 +1170,10 @@
           "named": true
         },
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "continue_statement",
           "named": true
         },
@@ -1314,6 +1322,10 @@
         },
         {
           "type": "call_statement",
+          "named": true
+        },
+        {
+          "type": "comment",
           "named": true
         },
         {
@@ -1565,6 +1577,10 @@
           "named": true
         },
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "continue_statement",
           "named": true
         },
@@ -1768,6 +1784,10 @@
         },
         {
           "type": "call_statement",
+          "named": true
+        },
+        {
+          "type": "comment",
           "named": true
         },
         {
@@ -2796,6 +2816,10 @@
         },
         {
           "type": "call_statement",
+          "named": true
+        },
+        {
+          "type": "comment",
           "named": true
         },
         {
