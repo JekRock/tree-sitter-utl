@@ -27,6 +27,15 @@ static void skip(TSLexer *lexer) {
 }
 
 bool tree_sitter_utl_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols) {
+  // When inside a directive (COMMENT valid but CONTENT not), skip whitespace
+  // before checking for comment start. This is needed because tree-sitter
+  // does not skip extras before calling the external scanner.
+  if (valid_symbols[COMMENT] && !valid_symbols[CONTENT]) {
+    while (iswspace(lexer->lookahead)) {
+      skip(lexer);
+    }
+  }
+
   // Try to parse a comment
   if (valid_symbols[COMMENT] && lexer->lookahead == '/') {
     lexer->mark_end(lexer);
