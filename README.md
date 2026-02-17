@@ -1,155 +1,98 @@
-# Tree-Sitter UTL Grammar
+# tree-sitter-utl
 
-A tree-sitter grammar for UTL (Universal Template Language) used in the BLOX CMS by TownNews.
+A [tree-sitter](https://tree-sitter.github.io/) grammar for UTL (Universal Template Language), the template language used in BLOX CMS by TownNews.
 
-## Status
+UTL files (`.utl`) are HTML templates with embedded code directives delimited by `[% ... %]`, similar to Twig, Jinja2, or ERB.
 
-**Phases Complete: 1-6** (Basic implementation done)
+## Features
 
-### ✅ Phase 1: Project Setup & Basic Structure
-- Project initialized with tree-sitter
-- External scanner for `content` and `comment` tokens
-- Basic directive parsing: `[%`, `[%-`, `%]`, `-%]`
-- Literals: identifier, number, string, boolean, null
-
-### ✅ Phase 2: Expressions
-- Arithmetic operators: `+`, `-`, `*`, `/`
-- Comparison: `==`, `!=`, `<`, `>`, `<=`, `>=`
-- Logical: `&&`, `||`, `!`
-- Filter expressions: `value | filter`, chained filters
-- Member access: `obj.property`
-- Subscript access: `array[0]`, `hash['key']`
-- Function/method calls with named arguments
-- Parenthesized expressions
-
-### ✅ Phase 3: Statements
-- Assignment: `=`, `+=`, `-=`
-- `echo`, `include`, `call`, `exit`, `return`
-- `break`, `continue`
-
-### ✅ Phase 4: Control Flow
-- `if condition; ... end;`
-- `if condition; ... else; ... end;`
-- `if condition; ... else if ...; ... end;`
-- Inline: `if condition then statement;`
-- `foreach array as item; ... end;`
-- `foreach array as key, value; ... end;`
-- `while condition; ... end;`
-- `for start..end as var; ... end;`
-
-### ✅ Phase 5: Macros & Complex Constructs
-- `macro name(param = default); ... end;`
-- Array literals: `[]`, `[a, b, c]`
-- Hash literals: `['key': value]`
-- Method chaining: `obj.method1().method2()`
-
-### ✅ Phase 6: Queries & Polish
-- Syntax highlighting queries (`queries/highlights.scm`)
-- HTML injection for content nodes (`queries/injections.scm`)
-
-## Test Results
-
-**57/57 tests passing** across all test categories:
-- Literals (9 tests)
-- Expressions (16 tests)
-- Statements (11 tests)
-- Control Flow (11 tests)
-- Macros (10 tests)
-
-## Known Limitations
-
-1. **Multi-directive macros**: Real UTL files use a pattern where macro definitions span multiple directives:
-   ```utl
-   [% macro name(); %]
-   ...template content...
-   [% end; %]
-   ```
-   Current grammar expects complete macro definitions in a single directive. This causes parse errors on real-world UTL files.
-
-2. **Comments in directives**: While supported in the grammar, there may be edge cases with multi-line comments inside directives.
-
-3. **Exit statement**: Not yet implemented (mentioned in plan but not in grammar).
+- **Directives**: `[% ... %]` with whitespace-trimming variants (`[%- ... %]`, `[% ... -%]`)
+- **Expressions**: arithmetic, comparison, logical, filter pipes, member access, subscripts, function/method calls with named arguments
+- **Literals**: strings (single/double quoted), numbers, booleans, null, arrays, hashes
+- **Statements**: assignment (`=`, `+=`, `-=`), `echo`, `include`, `call`, `return`, `break`, `continue`
+- **Control flow**: `if`/`else`/`else if`, `foreach`, `while`, `for` (range), inline `if`
+- **Macros**: named macro definitions with optional default parameters
+- **Split directives**: control structures split across multiple directive blocks (HTML interleaved with template logic)
+- **Comments**: block comments `/* ... */`
+- **Syntax highlighting**: via `queries/highlights.scm`
+- **HTML injection**: content nodes are parsed as HTML via `queries/injections.scm`
 
 ## Usage
 
-### Generate Parser
+### Generate parser
+
 ```bash
-cd grammar/tree-sitter-utl
 tree-sitter generate
 ```
 
-### Run Tests
-```bash
-tree-sitter test
-```
+Reads `grammar.js` and regenerates `src/parser.c`, `src/grammar.json`, and `src/node-types.json`. The hand-written `src/scanner.c` is not affected.
 
-### Parse a File
+### Parse a file
+
 ```bash
 tree-sitter parse path/to/file.utl
 ```
 
-### Syntax Highlighting
+### Run tests
+
+```bash
+tree-sitter test
+```
+
+### Syntax highlighting
+
 ```bash
 tree-sitter highlight path/to/file.utl
-```
-
-## File Structure
-
-```
-grammar/tree-sitter-utl/
-├── grammar.js              # Main grammar definition
-├── src/
-│   ├── scanner.c           # External scanner for content/comments
-│   ├── parser.c            # Generated parser
-│   └── tree_sitter/        # Generated tree-sitter API
-├── test/corpus/            # Test cases
-│   ├── literals.txt
-│   ├── expressions.txt
-│   ├── statements.txt
-│   ├── control_flow.txt
-│   └── macros.txt
-├── queries/
-│   ├── highlights.scm      # Syntax highlighting
-│   └── injections.scm      # HTML injection
-├── bindings/               # Language bindings
-│   ├── node/               # Node.js
-│   ├── rust/               # Rust
-│   └── python/             # Python
-├── package.json
-├── binding.gyp
-└── README.md
 ```
 
 ## UTL Syntax Reference
 
 ### Directives
-- `[% code %]` - Standard directive
-- `[%- code %]` - Suppress leading whitespace
-- `[% code -%]` - Suppress trailing whitespace
-- `[%- code -%]` - Suppress both
 
-### Comments
 ```utl
-/* Multi-line comment */
+[% code %]     standard directive
+[%- code %]    suppress leading whitespace/newline
+[% code -%]    suppress trailing whitespace/newline
+[%- code -%]   suppress both
 ```
 
-### Variables
+### Comments
+
+```utl
+/* This is a block comment */
+```
+
+### Variables and access
+
 ```utl
 [% variable %]
 [% obj.property %]
 [% array[index] %]
+[% obj.method() %]
 ```
 
 ### Filters
+
 ```utl
 [% name | lowercase %]
 [% name | truncate(10) %]
 [% name | lowercase | trim %]
 ```
 
-### Control Flow
+### Assignment
+
+```utl
+[% x = 42 %]
+[% count += 1 %]
+[% total -= discount %]
+```
+
+### Control flow
+
 ```utl
 [% if condition; %]
+    ...
+[% else if other; %]
     ...
 [% else; %]
     ...
@@ -159,30 +102,85 @@ grammar/tree-sitter-utl/
     [% item %]
 [% end; %]
 
+[% foreach map as key, value; %]
+    [% key %]: [% value %]
+[% end; %]
+
 [% while condition; %]
     ...
 [% end; %]
-```
 
-### Macros
-```utl
-[% macro name(param1, param2 = default); %]
-    ...
+[% for 1..10 as i; %]
+    [% i %]
 [% end; %]
 ```
 
-## Next Steps
+### Inline if
 
-To fully support real-world UTL files:
+```utl
+[% if condition then echo "yes"; %]
+```
 
-1. Refactor macro definitions to support multi-directive patterns
-2. Add `exit` statement support
-3. Improve error recovery for malformed directives
-4. Test and refine on larger corpus of real UTL files
-5. Add LSP server support for code intelligence
+### Macros
 
-## References
+```utl
+[% macro greet(name, greeting = "Hello"); %]
+    [% greeting %], [% name %]!
+[% end; %]
+```
 
-- [Tree-sitter documentation](https://tree-sitter.github.io/)
-- [Template Toolkit 2](http://www.template-toolkit.org/) (UTL inspiration)
-- BLOX CMS documentation
+### Arrays and hashes
+
+```utl
+[% items = ['a', 'b', 'c'] %]
+[% config = ['key': 'value', 'other': 42] %]
+```
+
+## Project Structure
+
+```
+tree-sitter-utl/
+├── grammar.js              # Grammar definition
+├── src/
+│   ├── scanner.c           # Hand-written external scanner (CONTENT, COMMENT tokens)
+│   ├── parser.c            # Generated parser (do not edit)
+│   └── tree_sitter/        # Generated tree-sitter headers
+├── queries/
+│   ├── highlights.scm      # Syntax highlighting captures
+│   └── injections.scm      # HTML injection for content nodes
+├── test/corpus/            # Corpus-based test suite
+│   ├── literals.txt
+│   ├── expressions.txt
+│   ├── statements.txt
+│   ├── control_flow.txt
+│   └── macros.txt
+├── bindings/
+│   └── node/               # Node.js bindings
+├── package.json
+└── binding.gyp
+```
+
+## Development
+
+### Adding new syntax
+
+1. Edit `grammar.js` to add the new rule
+2. Add test cases to the appropriate file in `test/corpus/`
+3. Run `tree-sitter generate` to regenerate the parser
+4. Run `tree-sitter test` to verify all tests pass
+5. Update `queries/highlights.scm` if the new syntax needs highlighting
+
+### Debugging parse errors
+
+```bash
+# Create a minimal test file and parse it
+tree-sitter parse test.utl
+
+# Look for (ERROR) nodes in the output
+# Run a specific test by name
+tree-sitter test --filter "test name pattern"
+```
+
+## License
+
+MIT

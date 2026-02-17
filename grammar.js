@@ -12,6 +12,8 @@ module.exports = grammar({
     [$.split_else, $.split_else_if],
     [$.else_clause, $.split_else],
     [$.else_clause, $.split_else_if],
+    [$.macro_definition, $.split_macro_start],
+    [$.macro_definition, $.split_end],
   ],
 
   extras: $ => [
@@ -167,7 +169,7 @@ module.exports = grammar({
       ';'
     )),
 
-    macro_definition: $ => prec(2, seq(
+    macro_definition: $ => prec.dynamic(2, seq(
       'macro',
       $.identifier,
       '(',

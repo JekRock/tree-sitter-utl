@@ -611,7 +611,7 @@
       }
     },
     "macro_definition": {
-      "type": "PREC",
+      "type": "PREC_DYNAMIC",
       "value": 2,
       "content": {
         "type": "SEQ",
@@ -1845,6 +1845,14 @@
     [
       "else_clause",
       "split_else_if"
+    ],
+    [
+      "macro_definition",
+      "split_macro_start"
+    ],
+    [
+      "macro_definition",
+      "split_end"
     ]
   ],
   "precedences": [],

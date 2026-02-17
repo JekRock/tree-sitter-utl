@@ -193,3 +193,77 @@ Complex nested expression
             filter: (identifier)))
         (identifier))))
   (content))
+
+================================================================================
+Split macro followed by another split macro in same directive
+================================================================================
+[% macro outer(); macro inner(); %]
+<div>content</div>
+[% end; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_macro_start
+        (identifier))
+      (split_macro_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_end)
+      (split_end)))
+  (content))
+
+================================================================================
+Split macro followed by assignment in same directive
+================================================================================
+[% macro setup(); x = "hello"; %]
+<div>[% x %]</div>
+[% end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_macro_start
+        (identifier))
+      (assignment
+        (identifier)
+        (string))))
+  (content)
+  (directive
+    (code
+      (identifier)))
+  (content)
+  (directive
+    (code
+      (split_end)))
+  (content))
+
+================================================================================
+Split macro with comment and nested split macro
+================================================================================
+[% macro outer(); /* a comment */ macro inner(); %]
+<div>content</div>
+[% end; end; %]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (code
+      (split_macro_start
+        (identifier))
+      (comment)
+      (split_macro_start
+        (identifier))))
+  (content)
+  (directive
+    (code
+      (split_end)
+      (split_end)))
+  (content))
